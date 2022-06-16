@@ -1,42 +1,21 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardImg, CardImgOverlay, CardText, CardTitle } from 'reactstrap';
-import DishDetail from './DetailComponent';
+import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
+
 
 
 class Menu extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedDish: null,
-        }
-    }//end constructor   
 
     onDishSelect(dish) {
+        
         this.setState({ selectedDish: dish })
+        
     }
-
-    renderDish(dish) {
-        if (dish != null)
-            return (
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            );
-        else
-            return (<div></div>);
-    }
-
-
 
     render() {
         const menu = this.props.dishes.map((dish) => {
             return (
-                <div className="col-12 col-md-5 m-1" key={dish.id}>
-                    <Card onClick={() => this.onDishSelect(dish)}>
+                <div key={dish.id} className="col-12 col-md-5 m-1" >
+                    <Card key={dish.id} onClick={() => this.props.onClick(dish.id)}>
                         <CardImg with="100%" src={dish.image} alt={dish.name}></CardImg>
                         <CardImgOverlay>
                             <CardTitle>{dish.name}</CardTitle>
@@ -51,19 +30,7 @@ class Menu extends Component {
                 <div className="row">
                     {menu}
                 </div>
-                <>
-                    {
-                        this.state.selectedDish != null ?
-                            (
-                                <div className="row">
-                                    <DishDetail dish={this.state.selectedDish} comments={this.state.selectedDish.comments}></DishDetail>
-                                </div>
-                            ) :
-                            (
-                                <></>
-                            )
-                    }
-                </>
+
             </div>
         )
 
