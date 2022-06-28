@@ -1,100 +1,74 @@
-import React from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap'
+import { Link } from "react-router-dom";
+import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardImg, CardText, CardTitle } from "reactstrap";
 import dateFormat from "dateformat";
 
 
-// class DishDetail extends React.Component {
-//     render() {
-//         if (this.props.dish != null) {
-//             const comment = this.props.dish.comments.map((item) => {
-//                 return (
-//                     <div>
-//                         <p>{item.comment}</p>
-//                         <p>{item.author}, {item.date}</p>
-//                     </div>
-//                 )
-//             });
-
-//             const dish = this.props.dish;
-//             return (
-//                 <div className="container">
-//                     <div className="row">
-//                         <div className="col-12 col-sm-5">
-//                             <Card>
-//                                 <CardImg top src={dish.image} alt={dish.name} />
-//                                 <CardBody>
-//                                     <CardTitle>{dish.name}</CardTitle>
-//                                     <CardText>{dish.description}</CardText>
-//                                 </CardBody>
-//                             </Card>
-//                         </div>
-//                         <div>
-//                             <div className="col-12 col-sm-7">
-//                                 <h2>comment</h2> {comment}
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             );
-//         } else {
-//             return (<div></div>);
-//         }
-//     }
-// }
-
-
 function RenderDish({ dish }) {
-
-    if (dish != null) {
+    if (dish)
         return (
-            <div className="col-12 col-sm-5 m-1">
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            </div>
+
+            <Card>
+                <CardImg top src={dish.image} alt={dish.name}></CardImg>
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                </CardBody>
+            </Card>
 
         )
-    } else return (<div></div>);
 }
 
 
-function RenderComments({ comments }) {
+const RenderComments = ({ comments }) => {
 
-    const comment = comments.map((item) => {
-        return (
-            <div key={item.id}>
-                <p>{item.comment}</p>
-                <p>-- {item.author}, {dateFormat(item.date, "fullDate")}</p>
-            </div>
-        )
-    });
-
-    return (
-        <div className="col-12 col-sm-5 text-left">
-            <h2>Comment</h2> {comment}
-        </div>
-    )
-}
-
-
-const DishDetail = (props) => {
-    if (props.dish != null) {
-        return (
-            <div className="container">
-                <div className="row">
-
-                    <RenderDish dish={props.dish}></RenderDish>
-                    <RenderComments comments={props.dish.comments}></RenderComments>
-
+    if (comments != null) {
+        const comment = comments.map((item) => {
+            const { id, comment, author, date } = item
+            return (
+                <div key={id}>
+                    <p>{comment}</p>
+                    <p>{author} | {dateFormat(date, "fullDate")}</p>
                 </div>
-            </div>
+            )
+        })
+        return (
+            <>
+                <h2>Comments</h2>
+                {comment}
+            </>
         )
     }
     return <></>
 }
 
-export default DishDetail;
+const DishDetail = (props) => {
+    if (props.dish != null) {
+        const dish = props.dish;
+        const comments = props.comments;
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderDish dish={dish} />
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderComments comments={comments} />
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+}
+
+export default DishDetail
